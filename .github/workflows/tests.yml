@@ -1,0 +1,40 @@
+# The test suite of Pangoloop: standard library only, no secrets, no network step after the checkout.
+# Added November 20, 2026 by Claude for the day this repository is hosted; it has not run on GitHub yet.
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unittest:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Show the tools the tests start
+        run: |
+          python --version
+          git --version
+          ps --version
+          pgrep --version
+      - name: Run the suite
+        run: python -m unittest discover -s tests

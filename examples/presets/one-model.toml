@@ -1,0 +1,30 @@
+# Preset: the smallest setup. One model for every role.
+#
+# Use it to try Pangoloop with the least to configure, or when you have access to one model only. Copy it to
+# ./pangoloop.toml (or pass --config <file>) and edit.
+#
+# What to replace: the one model@provider, written three times below (the coder, the reviewer and the interface model),
+# and in the readers. With the Claude Code runner write the model alone (`"sonnet"`) and set `name = "claude-code"`.
+# A run whose plan needs a route that still holds the placeholder stops before it starts, with exit 2.
+#
+# What you lose: a reviewer that is the same model as the coder tends to agree with it and miss what it missed, so a PASS
+# means less. The interface route only works if this model can look at images. Readers of one model give one opinion
+# of your plan, not two. Give the reviewer a different model for the one node that matters most, as soon as you can.
+#
+# Check it before a run:   python3 -m pangoloop config --config examples/presets/one-model.toml
+
+[runner]
+name = "hermes"                  # or "claude-code"; PANGOLOOP_RUNNER wins over this
+
+[routes]
+default = "default-model@example-provider"
+review = "default-model@example-provider"
+ui = "default-model@example-provider"
+
+[readers]
+quick = "default-model@example-provider"
+
+[limits]
+# max_cost_usd = 5.0             # no new worker starts once the run's known cost is over this
+max_parallel = 2
+max_turns = 100

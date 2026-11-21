@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pangoloop"
+dynamic = ["version"]   # one place: `__version__` in pangoloop/__init__.py (`pangoloop version` prints it too)
+description = "Runs a plan of coding-agent nodes as a graph: each node a task for a model session, then the acceptance and the reviews."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/albedoweb/pangoloop"
+Issues = "https://github.com/albedoweb/pangoloop/issues"
+
+[project.scripts]
+pangoloop = "pangoloop.cli:main"
+
+# The package reads no file from its own folder at run time (the viewer's page is inside view.py), so there is no package
+# data. prompts/, examples/, docs/ and tests/ stay in the repository.
+[tool.setuptools]
+packages = ["pangoloop", "pangoloop.runners"]
+
+[tool.setuptools.dynamic]
+version = {attr = "pangoloop.__version__"}

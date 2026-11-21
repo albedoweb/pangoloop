@@ -1,0 +1,11 @@
+{
+ "node": "review",
+ "worker": "15-review-fix1",
+ "asked_at": "2026-01-11T00:42:16Z",
+ "request": "the finding is fixed, but one screenshot comparison fails deterministically on a screen my edits cannot reach; a defect or the environment?",
+ "for": "coordinator",
+ "answer_tail": "The finding is fixed. One screenshot differs by 1200 pixels, the same on three runs.\n\nNEEDS COORDINATOR: the finding is fixed, but one screenshot comparison fails deterministically on a screen my edits cannot reach; a defect or the environment?",
+ "state": "answered",
+ "answered_by": "coordinator",
+ "answered_at": "2026-01-11T00:49:31Z"
+}

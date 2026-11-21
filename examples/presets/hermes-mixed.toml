@@ -1,0 +1,47 @@
+# Preset: the Hermes Agent runner with a mix of models: a cheap coder, a reviewer of another vendor, an interface model
+# that can see, and two readers for `preflight`.
+#
+# Use it when you have Hermes Agent and can reach models from more than one vendor. Copy it to ./pangoloop.toml (or pass
+# --config <file>) and edit.
+#
+# What to replace: every model@provider below is a PLACEHOLDER. Only your own Hermes knows which providers it has
+# (its own provider list), so write a model and a provider you can really call. A run whose plan needs a
+# route that still holds a placeholder stops before it starts, with exit 2, and names the route. Also set `profile`
+# if you use a Hermes profile other than the default.
+#
+# The shape matters more than the names: the coder is cheap and fast because most nodes are routine; the reviewer is of
+# another vendor, so that it does not share the coder's blind spots; the interface model must accept images; the two readers
+# differ in cost, a quick one for every draft and a careful one before a long run.
+#
+# Check it before a run:   python3 -m pangoloop config --config examples/presets/hermes-mixed.toml
+
+[runner]
+name = "hermes"                  # PANGOLOOP_RUNNER wins over this
+
+[runner.hermes]
+# profile = "my-profile"         # a Hermes profile (`hermes profile list`); left out: Hermes's own default profile
+
+[routes]                         # category = "model@provider"; `default` is every category not listed
+default = "default-model@example-provider"     # the cheap coder: most nodes
+review = "review-model@example-provider"       # the reviewer: another vendor than the coder
+ui = "ui-model@example-provider"               # interface nodes: a model that can see screenshots
+
+[readers]                        # `preflight --reader quick`; with no --reader every reader here reads
+quick = "reader-model-one@example-provider"
+careful = "reader-model-two@example-provider"
+
+# The cost of a run: dollars per million tokens, per model id or a prefix of one (the id the provider reports). The numbers
+# are PLACEHOLDERS for the shape of the table, not a price list: copy the current ones from your provider.
+# [prices]
+# "default-model" = { input = 0.3, output = 1.2, cache_read = 0.03, cache_write = 0.3 }
+
+[limits]                         # the numbers that were environment variables (SG_*); an environment variable wins
+# max_cost_usd = 5.0             # no new worker starts once the run's known cost is over this
+max_parallel = 3                 # SG_MAX_PARALLEL
+max_fix_rounds = 2               # SG_MAX_FIX_ROUNDS
+node_limit_seconds = 3600        # SG_NODE_LIMIT_SECONDS
+max_turns = 200                  # SG_MAX_TURNS
+acceptance_seconds = 1800        # SG_ACCEPTANCE_SECONDS
+integration_check_seconds = 900  # SG_INTEGRATION_CHECK_SECONDS
+human_wait_seconds = 86400       # SG_HUMAN_WAIT_SECONDS
+coordinator_wait_seconds = 900   # PANGOLOOP_COORDINATOR_WAIT_SECONDS

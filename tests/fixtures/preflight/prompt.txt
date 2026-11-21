@@ -1,0 +1,10 @@
+You are checking written instructions before they are given to coding agents and to a reviewer of their work. Read the file $FILE in full. It is the complete text one agent will get. Do not do the task and do not judge whether the task is a good one.
+
+Report only these three kinds of fault:
+1. CONTRADICTION: two places where one forbids or excludes what the other requires or allows. A rule of one part that, read literally, forbids what another part asks for counts.
+2. TWO READINGS: a sentence that two careful readers could understand differently, with different work or a different verdict as the result.
+3. CANNOT BE MET: a rule that cannot be satisfied as written, or that depends on something the text never defines.
+
+For each fault: its kind; both places quoted word for word with their line numbers; why they clash; and one concrete situation in which an agent or a reviewer would be stuck or would make a wrong finding. Do not report style, wording you merely dislike, or missing features.
+
+Your first line is exactly "COUNT: <number of faults>". Then the faults, numbered, most damaging first. If a kind has none, say so in one line at the end.

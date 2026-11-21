@@ -1,0 +1,11 @@
+{
+ "node": "play",
+ "worker": "07-play",
+ "asked_at": "2026-01-10T23:34:35Z",
+ "request": "removing the default level leaves a helper with no caller; keep it or delete it?",
+ "for": "coordinator",
+ "answer_tail": "The default level is gone. One helper has no caller now.\n\nNEEDS COORDINATOR: removing the default level leaves a helper with no caller; keep it or delete it?",
+ "state": "answered",
+ "answered_by": "coordinator",
+ "answered_at": "2026-01-10T23:35:11Z"
+}

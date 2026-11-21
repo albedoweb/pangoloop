@@ -1,0 +1,11 @@
+{
+ "node": "fixture",
+ "worker": "05-fixture",
+ "asked_at": "2026-01-10T23:09:47Z",
+ "request": "the rename needs a one-line import edit in a file outside my scope; allowed?",
+ "for": "coordinator",
+ "answer_tail": "The rename is done except for one import in `tests/other.test.ts`.\n\nNEEDS COORDINATOR: the rename needs a one-line import edit in a file outside my scope; allowed?",
+ "state": "answered",
+ "answered_by": "coordinator",
+ "answered_at": "2026-01-10T23:10:31Z"
+}

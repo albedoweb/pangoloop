@@ -1,0 +1,59 @@
+{
+ "entry": {
+  "node": "acceptance-final",
+  "round": 1,
+  "commands": [
+   {
+    "command": "npm run typecheck",
+    "exit": 0,
+    "seconds": 4
+   },
+   {
+    "command": "npm run lint",
+    "exit": 0,
+    "seconds": 6
+   },
+   {
+    "command": "npm run build",
+    "exit": 0,
+    "seconds": 4
+   },
+   {
+    "command": "node scripts/check-chunks.mjs",
+    "exit": 0,
+    "seconds": 0
+   },
+   {
+    "command": "node scripts/unused-modules.mjs",
+    "exit": 0,
+    "seconds": 0
+   },
+   {
+    "command": "node scripts/check-boundaries.mjs",
+    "exit": 0,
+    "seconds": 1
+   },
+   {
+    "command": "node scripts/unused-exports.mjs",
+    "exit": 0,
+    "seconds": 1
+   },
+   {
+    "command": "npm test",
+    "exit": 0,
+    "seconds": 198
+   },
+   {
+    "command": "npx playwright test tests/smoke",
+    "exit": 0,
+    "seconds": 74
+   },
+   {
+    "command": "npx playwright test -c playwright.golden.config.ts",
+    "exit": 0,
+    "seconds": 76
+   }
+  ]
+ },
+ "failures": []
+}

@@ -1,0 +1,65 @@
+{
+ "entry": {
+  "node": "acceptance-final",
+  "round": 0,
+  "commands": [
+   {
+    "command": "npm run typecheck",
+    "exit": 0,
+    "seconds": 4
+   },
+   {
+    "command": "npm run lint",
+    "exit": 0,
+    "seconds": 6
+   },
+   {
+    "command": "npm run build",
+    "exit": 0,
+    "seconds": 4
+   },
+   {
+    "command": "node scripts/check-chunks.mjs",
+    "exit": 0,
+    "seconds": 0
+   },
+   {
+    "command": "node scripts/unused-modules.mjs",
+    "exit": 0,
+    "seconds": 0
+   },
+   {
+    "command": "node scripts/check-boundaries.mjs",
+    "exit": 0,
+    "seconds": 1
+   },
+   {
+    "command": "node scripts/unused-exports.mjs",
+    "exit": 0,
+    "seconds": 1
+   },
+   {
+    "command": "npm test",
+    "exit": 0,
+    "seconds": 320
+   },
+   {
+    "command": "npx playwright test tests/smoke",
+    "exit": 1,
+    "seconds": 77
+   },
+   {
+    "command": "npx playwright test -c playwright.golden.config.ts",
+    "exit": 0,
+    "seconds": 268
+   }
+  ]
+ },
+ "failures": [
+  [
+   "npx playwright test tests/smoke",
+   1,
+   "Running 18 tests using 4 workers\n\n  \u2713  1 [chromium] \u203a tests/smoke/b.spec.ts:10:1 \u203a opens the first page (1.3s)\n  \u2713  2 [chromium] \u203a tests/smoke/c.spec.ts:20:1 \u203a shows the list (2.0s)\n  \u2713  3 [chromium] \u203a tests/smoke/a.spec.ts:30:1 \u203a keeps a value after a reload (2.7s)\n  \u2713  4 [chromium] \u203a tests/smoke/b.spec.ts:40:1 \u203a closes the dialog with Escape (3.4s)\n  \u2713  5 [chromium] \u203a tests/smoke/c.spec.ts:50:1 \u203a opens the help page (1.1s)\n  \u2713  6 [chromium] \u203a tests/smoke/a.spec.ts:60:1 \u203a moves the item (1.8s)\n  \u2713  7 [chromium] \u203a tests/smoke/b.spec.ts:70:1 \u203a shows the totals (2.5s)\n  \u2713  8 [chromium] \u203a tests/smoke/c.spec.ts:80:1 \u203a copies the link (3.2s)\n  \u2713  9 [chromium] \u203a tests/smoke/a.spec.ts:90:1 \u203a edits a property (0.9s)\n  \u2713  10 [chromium] \u203a tests/smoke/b.spec.ts:100:1 \u203a stops a run (1.6s)\n  \u2713  11 [chromium] \u203a tests/smoke/c.spec.ts:110:1 \u203a opens the editor (2.3s)\n  \u2713  12 [chromium] \u203a tests/smoke/a.spec.ts:120:1 \u203a holds still after a run (3.0s)\n  \u2718  13 [chromium] \u203a tests/smoke/a.spec.ts:972:1 \u203a holds every item still after a run (28.6s)\n  -  14 [chromium] \u203a tests/smoke/a.spec.ts:1014:1 \u203a offers no import\n  -  15 [chromium] \u203a tests/smoke/a.spec.ts:1015:1 \u203a holds still under reduced motion\n  -  16 [chromium] \u203a tests/smoke/a.spec.ts:1016:1 \u203a runs the demo\n  -  17 [chromium] \u203a tests/smoke/a.spec.ts:1017:1 \u203a is the same page in dark and light\n  -  18 [chromium] \u203a tests/smoke/a.spec.ts:1018:1 \u203a draws the run at the median time\n\n\n  1) [chromium] \u203a tests/smoke/a.spec.ts:972:1 \u203a holds every item still after a run \n\n    Error: expect(locator).toHaveText(expected) failed\n\n    Locator: locator('.stamp')\n    Expected pattern: /^(Not passed|Passed)$/\n    Timeout: 20000ms\n    Error: element(s) not found\n\n    Call log:\n      - Expect \"toHaveText\" locator('.stamp') with timeout 20000ms\n\n      1039 |   await expect(stamp(page)).toHaveText(/^(Not passed|Passed)$/, {\n    at /home/example/project/tests/smoke/a.spec.ts:1039:29\n\n  1 failed\n    [chromium] \u203a tests/smoke/a.spec.ts:972:1 \u203a holds every item still after a run \n  5 did not run\n  12 passed (1.3m)\n"
+  ]
+ ]
+}

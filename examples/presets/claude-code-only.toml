@@ -1,0 +1,49 @@
+# Preset: everything through Claude Code (`claude -p`), no Hermes.
+#
+# Use it when Claude Code is the one tool you have and you log in to it with a subscription or an API key. Copy it to
+# ./pangoloop.toml (or pass --config <file>) and edit.
+#
+# What to replace: nothing is needed to start. The model names below are the aliases Claude Code accepts for its
+# `--model` option (`sonnet`, `opus`, `haiku`; a full model id works too). They are starting values, not a
+# recommendation: put in whatever your account has and you trust for each role. The provider part of a route may be
+# left out; for this runner it can only be `anthropic`.
+#
+# What you give up: the reviewer is another model than the coder, but both come from one vendor, so their blind spots are
+# alike. Read docs/SETUP.md ("Roles") for how to compensate.
+#
+# Check it before a run:   python3 -m pangoloop config --config examples/presets/claude-code-only.toml
+
+[runner]
+name = "claude-code"             # PANGOLOOP_RUNNER wins over this
+
+[routes]                         # a node's `category` picks its route; `default` is every category not listed
+default = "sonnet"               # the coder: most nodes
+review = "opus"                  # the reviewer: a different model than the coder
+ui = "opus"                      # interface nodes: use a model that can see screenshots
+simple-work = "haiku"            # an example of a category of your own: cheap, mechanical nodes
+
+[readers]                        # `preflight --reader quick`: a name you choose = model; with none given, all of them read
+quick = "haiku"
+careful = "opus"
+
+[runner.claude_code]
+# binary = "claude"              # the command (PANGOLOOP_CLAUDE_COMMAND wins)
+# default_deny = true            # the built-in deny list (git push, sudo, rm -rf, ssh, kubectl, terraform apply, ...)
+# deny = ["Bash(make deploy*)"]  # your own patterns, added to it; syntax: Claude Code permission rules
+# allow = ["Bash(make test)"]    # extra allowed patterns (the file tools and the shell are allowed already)
+# flags = ["--effort", "medium"] # extra words, appended to the command
+# persist_sessions = false       # true keeps each node's session file (needed to resume one by hand)
+# strict_mcp = true              # true: no MCP servers from your own Claude Code configuration
+
+# The cost of a run: dollars per million tokens, per model id or a prefix of one. The keys are the ids the provider
+# reports for a model; the numbers below are PLACEHOLDERS for the shape of the table, not a price list: copy the current
+# ones from the provider. Without a price a worker's cost is unknown and the run's cost says it is partial (Claude Code
+# also reports a cost of its own, which is used where the table has no price).
+# [prices]
+# "model-id" = { input = 3.0, output = 15.0, cache_read = 0.3, cache_write = 3.75 }
+
+[limits]
+# max_cost_usd = 5.0             # no new worker starts once the run's known cost is over this (PANGOLOOP_MAX_COST_USD wins)
+max_turns = 100                  # a turn is one model call; Claude Code stops the session with exit 1 at the limit
+node_limit_seconds = 3600        # the longest one worker session may run
+max_parallel = 3                 # nodes side by side

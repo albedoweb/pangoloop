@@ -1,0 +1,11 @@
+{
+ "node": "acceptance-final",
+ "worker": "18-acceptance-final-fix1",
+ "asked_at": "2026-01-11T01:48:08Z",
+ "request": "the acceptance failure was machine-induced timing; may I accept the node as no change?",
+ "for": "coordinator",
+ "answer_tail": "The failing test passes alone in 2 s.\n\nNEEDS COORDINATOR: the acceptance failure was machine-induced timing; may I accept the node as no change?",
+ "state": "answered",
+ "answered_by": "coordinator",
+ "answered_at": "2026-01-11T01:48:24Z"
+}

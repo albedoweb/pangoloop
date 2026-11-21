@@ -1,0 +1,15 @@
+{
+  "name": "pangoloop",
+  "description": "The pangoloop skill: run coding work as a graph of agents.",
+  "owner": {
+    "name": "albedoweb"
+  },
+  "plugins": [
+    {
+      "name": "pangoloop",
+      "source": "./",
+      "description": "Lets your coding agent run a piece of work as a graph of coding-agent nodes with the pangoloop command.",
+      "version": "0.1.0"
+    }
+  ]
+}

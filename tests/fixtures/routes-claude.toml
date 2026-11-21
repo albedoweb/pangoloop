@@ -1,0 +1,5 @@
+# The same for the Claude Code runner's stand-in (a stub of the `claude` command).
+[routes]
+default = "coder-model"
+review = "reviewer-model"
+ui = "ui-model-stub"

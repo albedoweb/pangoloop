@@ -1,0 +1,13 @@
+{
+  "name": "pangoloop",
+  "version": "0.1.0",
+  "description": "Lets your coding agent run a piece of work as a graph of coding-agent nodes with the pangoloop command: parallel parts in their own git worktrees, scripted checks, an independent review, and a local page of the run.",
+  "author": {
+    "name": "albedoweb"
+  },
+  "homepage": "https://github.com/albedoweb/pangoloop",
+  "repository": "https://github.com/albedoweb/pangoloop",
+  "license": "MIT",
+  "keywords": ["agents", "graph", "worktrees", "review", "orchestration"],
+  "skills": "./skills/"
+}

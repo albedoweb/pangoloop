@@ -1,0 +1,1 @@
+Read notes.txt and app.py, then append the line "x" to notes.txt, then run `git status --short`.

@@ -1,0 +1,1 @@
+Append the line "third line" to notes.txt, then run `git status --short` and show me its output.

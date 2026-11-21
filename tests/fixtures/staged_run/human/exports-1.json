@@ -1,0 +1,11 @@
+{
+ "node": "exports",
+ "worker": "11-exports",
+ "asked_at": "2026-01-11T00:11:50Z",
+ "request": "rules E1 and G1 collide on one exported constant",
+ "for": "coordinator",
+ "answer_tail": "Two rules collide on `sampleScopes`.\n\nNEEDS COORDINATOR: rules E1 and G1 collide on one exported constant",
+ "state": "answered",
+ "answered_by": "coordinator",
+ "answered_at": "2026-01-11T00:12:08Z"
+}

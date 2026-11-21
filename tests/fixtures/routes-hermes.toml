@@ -1,0 +1,5 @@
+# Routes of the tests that run the engine with a stand-in runner: no real model is named anywhere in the suite's engine runs.
+[routes]
+default = "coder-model@stub-provider"
+review = "reviewer-model@stub-provider"
+ui = "ui-model-stub@stub-provider"

@@ -1,0 +1,1 @@
+Ruling of the coordinator. It is an environment difference: the untouched base fails the same state with the same pixel count. Re-check it at acceptance.

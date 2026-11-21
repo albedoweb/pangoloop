@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+.eggs/
+build/
+dist/
+wheels/
+pip-wheel-metadata/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# Virtual environments
+.venv/
+venv/
+env/
+.python-version
+
+# The default folder of runs and a local runs folder
+.pangoloop/
+runs/
+
+# A person's own configuration in the repository folder (the examples are in examples/)
+/pangoloop.toml
+
+# Editors and operating systems
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+Thumbs.db
+
+# Secrets and local environment files never belong here
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Claude Code's local folders (settings and worktrees of a session)
+.claude/
