@@ -27,7 +27,10 @@ python3 -m unittest discover -s tests -p 'test_resume.py'   # one module
   (`test_the_pages_script_is_valid_javascript`) skips itself when `node` is not installed. One test is an expected failure
   by design (`test_ui_whole_script`): when it starts to pass, remove its marker.
 - A test that cannot run on some system is marked to skip with the reason, never deleted.
-- Linux (the workflow has not run on GitHub yet; the suite was read for it, not run there): no test uses a macOS-only tool. The
+- Linux: the workflow runs the suite on GitHub at every push. Its first run (November 24, 2026) failed five tests for two
+  reasons, both fixed: the engine copied `node_modules` with a `cp` flag only macOS has, and three tests assumed that the
+  shell which runs a command replaces itself with it (the `sh` of macOS does, the `sh` of most Linux systems does not). No
+  real run with a model has been made on Linux. No test uses a macOS-only tool. The
   desktop notification (`osascript`, `terminal-notifier`) is switched off or replaced in every test, `git` is always given an
   identity and `init -b work` on the command line, and the `ps -o lstart=`, `ps -axo pid=,ppid=` and `pgrep -f` forms used by the
   engine and the tests are the ones procps on Linux accepts. Where a first run on Linux fails, look first at the process

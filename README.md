@@ -126,7 +126,7 @@ forward or expose it. Anyone who can reach it can read every run of the project 
 
 ## Status and limits
 
-Version 0.1.0; no release and no tag yet. The suite has 464 tests that use stand-ins in place of a model.
+Version 0.1.0; no release and no tag yet. The suite has 467 tests that use stand-ins in place of a model.
 
 - It is for someone who already works with coding agents and has a piece of work that can be written down as a statement with
   checkable commands. It is not an agent, it does not decide what to build, it is not a hosted service, and it has no accounts.

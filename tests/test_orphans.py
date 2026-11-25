@@ -25,6 +25,16 @@ def alive(pid: int) -> bool:
     return bool(out) and not out.startswith('Z')
 
 
+def leader_of(pid: int) -> int:
+    """The leader of the process's group: the process the engine started and recorded. A command runs under `sh -c`;
+    whether that shell replaces itself with the command (then the command is the leader, as on macOS) or stays as
+    its parent (as with the `sh` of most Linux systems) is the shell's choice, and the engine does not depend on it."""
+    try:
+        return os.getpgid(pid)
+    except ProcessLookupError:
+        return pid
+
+
 def wait_for(test, condition, what, seconds=20):
     end = time.time() + seconds
     while time.time() < end:
@@ -85,7 +95,7 @@ class Scenario(unittest.TestCase):
             except (OSError, ValueError):
                 return 0
         pid = wait_for(self, read, name)
-        self.pids.append(pid)
+        self.pids.append(leader_of(pid))
         return pid
 
     def recorded(self, name='r'):
@@ -99,27 +109,31 @@ class Scenario(unittest.TestCase):
     def worker_nodes(self):
         return (helpers.node_text('a'),)
 
-    def command_node(self, role):
+    def command_node(self, role, tail=''):
+        """A node whose command is the sleeper. With a `tail` (` && true`) the shell that runs the command cannot
+        replace itself with it on any system, so the recorded process is the shell and the command is its child."""
         if role == 'script':
-            return helpers.script_node('a', f'run `sh {self.sleeper}`')
-        return helpers.node_text('a', role='acceptance', VERIFY=f'`sh {self.sleeper}`')
+            return helpers.script_node('a', f'run `sh {self.sleeper}{tail}`')
+        return helpers.node_text('a', role='acceptance', VERIFY=f'`sh {self.sleeper}{tail}`')
 
 
 class KillNine(Scenario):
     def check(self, nodes, pidfile, childfile, kind):
         process = self.start(*nodes)
         pid, grandchild = self.pid_of(pidfile), self.pid_of(childfile)
-        entry = wait_for(self, lambda: self.recorded().get(str(pid)), 'the record of the child')
+        leader = leader_of(pid)   # what the engine started; the command itself, or the shell that runs it
+        entry = wait_for(self, lambda: self.recorded().get(str(leader)), 'the record of the child')
         self.assertEqual(entry['kind'], kind)
-        self.assertEqual(entry['started'], children.start_time(pid), 'the start time the system reports')
-        self.assertEqual(os.getpgid(pid), pid, 'the child leads a process group of its own')
+        self.assertEqual(entry['started'], children.start_time(leader), 'the start time the system reports')
+        self.assertNotEqual(leader, os.getpgid(0), 'the child leads a process group of its own, not the test\'s')
+        self.assertEqual(os.getpgid(grandchild), leader, 'what the child started is in its group')
         process.kill()
         process.wait()
         self.assertTrue(alive(pid) and alive(grandchild), 'the orphans are running: that is the fault')
         done = self.cleanup()
         self.assertEqual(done.returncode, 0, done.stderr)
         self.assertIn(f'stopped {kind}', done.stdout)
-        self.assertIn(f'pid {pid}', done.stdout)
+        self.assertIn(f'pid {leader}', done.stdout)
         wait_for(self, lambda: not alive(pid) and not alive(grandchild), 'the orphans to be stopped')
         self.assertEqual(self.recorded(), {}, 'the record is cleared')
         again = self.cleanup()
@@ -127,6 +141,9 @@ class KillNine(Scenario):
 
     def test_a_worker_and_its_child_are_stopped_by_cleanup(self):
         self.check(self.worker_nodes(), 'worker.pid', 'worker-child.pid', 'worker')
+
+    def test_a_command_under_a_shell_that_stays_is_stopped_by_cleanup(self):
+        self.check((self.command_node('script', ' && true'),), 'command.pid', 'command-child.pid', 'script step')
 
     def test_a_script_step_is_stopped_by_cleanup(self):
         self.check((self.command_node('script'),), 'command.pid', 'command-child.pid', 'script step')
@@ -196,7 +213,7 @@ class Signals(Scenario):
     def signal_stops_everything(self, sig, code, nodes, pidfile, childfile):
         process = self.start(*nodes)
         pid, grandchild = self.pid_of(pidfile), self.pid_of(childfile)
-        wait_for(self, lambda: self.recorded().get(str(pid)), 'the record of the child')
+        wait_for(self, lambda: self.recorded().get(str(leader_of(pid))), 'the record of the child')
         process.send_signal(sig)
         process.communicate(timeout=60)
         self.assertEqual(process.returncode, code)

@@ -222,6 +222,21 @@ def kill_tree(root: int) -> None:
         time.sleep(2)
 
 
+def copy_packages(source: str, target: str) -> None:
+    """Copies a folder of installed packages into a node's copy, as cheaply as the system allows: on macOS a clone
+    (`cp -Rc`: no data is copied until a file changes); elsewhere `cp -R --reflink=auto`, which clones where the file
+    system can and copies where it cannot, and a plain `cp -R` for a `cp` that does not know that option. Fails with
+    CalledProcessError only when the plain copy fails too. (Until November 24, 2026 it was `cp -Rc` everywhere,
+    which GNU cp refuses: on Linux every node of a project with node_modules failed.)"""
+    if sys.platform == 'darwin':
+        subprocess.run(['cp', '-Rc', source, target], check=True)
+        return
+    if subprocess.run(['cp', '-R', '--reflink=auto', source, target], capture_output=True).returncode == 0:
+        return
+    shutil.rmtree(target, ignore_errors=True)   # whatever the refused command left
+    subprocess.run(['cp', '-R', source, target], check=True)
+
+
 def kill_command(pid: int) -> None:
     """Stops a command the engine runs (the leader of a group of its own) with everything under it: the tree found by the
     process table (a child that left the group is found that way) and then the group itself."""
@@ -642,7 +657,7 @@ class Run:
         # of one layer would start one after another instead of together.
         began = time.time()
         if os.path.isdir(f'{self.repo}/node_modules'):
-            subprocess.run(['cp', '-Rc', f'{self.repo}/node_modules', f'{copy}/node_modules'], check=True)
+            copy_packages(f'{self.repo}/node_modules', f'{copy}/node_modules')
         fact['setup_seconds'] = round(time.time() - began, 1)
         os.makedirs(f'{self.out}/plans', exist_ok=True)
         plan_path = f"{self.out}/plans/{node['id']}.md"

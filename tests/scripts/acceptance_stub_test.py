@@ -43,7 +43,12 @@ def node(node_id: str, role: str, deps: str, verify: str = 'v') -> str:
             f'- VERIFY: {verify}\n- STOP WHEN: w\n')
 
 
-checks = 'the commands `test -f a.txt && test -f b.txt` and `sh -c "if [ -f slow.flag ]; then sleep 30; fi; grep -q good b.txt"` exit 0.'
+# The hung command sleeps a length that only this test process uses, so that the search for what it left behind
+# (below) cannot meet another program's `sleep 30` on the same machine: that happened, on Linux after other tests
+# left a `sleep 300`, and on a machine where another session was waiting in a loop of `sleep 30`.
+NAP = f'30.{os.getpid()}'
+checks = ('the commands `test -f a.txt && test -f b.txt` and `sh -c "if [ -f slow.flag ]; then sleep ' + NAP
+          + '; fi; grep -q good b.txt"` exit 0.')
 plan = ('# Plan\n\nRepository: `{{REPO}}`.\n\nAll nodes work in the same folder. Two.\n\n## Nodes\n\n'
         + '\n'.join([node('a', 'build', 'none'), node('b', 'build', 'none'), node('acceptance', 'acceptance', 'a, b', checks),
                      node('review', 'review', 'acceptance'), node('acceptance-final', 'acceptance', 'review', checks)])
@@ -90,7 +95,7 @@ print('verdict:', verdict, '| nodes:', run.status)
 print('sessions:', seen)
 for entry in result['acceptance']:
     print('acceptance:', entry['node'], 'round', entry['round'], [(c['exit'], c['seconds']) for c in entry['commands']])
-left = subprocess.run(['pgrep', '-f', 'sleep 30'], capture_output=True, text=True).stdout.split()
+left = subprocess.run(['pgrep', '-f', f'sleep {NAP}$'], capture_output=True, text=True).stdout.split()
 print('hung command left behind:', left or 'none')
 assert verdict == 'verified', verdict
 assert seen == ['a', 'b', 'acceptance-fix1', 'acceptance-fix2', 'review'] or seen == ['b', 'a', 'acceptance-fix1', 'acceptance-fix2', 'review'], seen
